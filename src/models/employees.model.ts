@@ -52,7 +52,7 @@ export async function getEmployees(
       "tribes.id as tribe.id",
       "tribes.name as tribe.name",
       "tribes.department as tribe.department"
-    );
+    ).orderBy("id");
 
   if (searchQuery.name)
     employeesQuery.whereLike("employees.name", `%${searchQuery.name}%`);
@@ -88,6 +88,12 @@ export async function getEmployee(fastify: FastifyInstance, id: number) {
   }
 
   return toEmployeeDTO(employeeQueryResult);
+}
+
+export async function modifyEmployee(fastify: FastifyInstance, employee: EmployeeBodyType, id: number){
+  await fastify.db.from(TABLE_NAME)
+  .where({ "employees.id": id })
+  .update(employee)
 }
 
 export async function createEmployee(
